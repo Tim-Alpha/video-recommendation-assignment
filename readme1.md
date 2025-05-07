@@ -67,8 +67,6 @@ Returns personalized post recommendations.
 curl "http://127.0.0.1:8000/feed?username=afrobeezy"
 ```
 
-📫 Test the API: Import `postman_collection.json` from the `docs/` folder into Postman.
-
 ---
 
 ## ✅ API Response Format
@@ -118,8 +116,6 @@ curl "http://127.0.0.1:8000/feed?username=afrobeezy"
 5. **Post Formatting**: Formats post metadata into structured JSON.
 
 ---
-
-📚 Learn how the system works: [docs/system_overview.md](docs/system_overview.md)
 
 ## 🛠️ Development Notes
 

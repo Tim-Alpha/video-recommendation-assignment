@@ -1,0 +1,55 @@
+{
+  "info": {
+    "_postman_id": "4c4eaf6b-fc23-44e3-bf4c-bb0e11f56bb2",
+    "name": "Video Recommendation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Feed (username only)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/feed?username=afrobeezy",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["feed"],
+          "query": [
+            {
+              "key": "username",
+              "value": "afrobeezy"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Feed (username + project_code)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/feed?username=afrobeezy&project_code=2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["feed"],
+          "query": [
+            {
+              "key": "username",
+              "value": "afrobeezy"
+            },
+            {
+              "key": "project_code",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
