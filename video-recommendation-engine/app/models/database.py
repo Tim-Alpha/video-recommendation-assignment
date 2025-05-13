@@ -76,31 +76,17 @@ class Neo4jDatabase:
         return self.run_query(query)
 
     def get_post_by_id(self, post_id):
+        
+        post_id = int(post_id)  # Ensure post_id is an integer
         query = """
         MATCH (p:Post {id: $post_id})
-        OPTIONAL MATCH (p)-[:BELONGS_TO]->(cat:Category)
-        OPTIONAL MATCH (p)-[:HAS_TOPIC]->(t:Topic)
-        OPTIONAL MATCH (p)-[:CREATED_BY]->(u:User)
-        OPTIONAL MATCH (p)-[:USES_TOKEN]->(bt:BaseToken)
-        RETURN 
-            p.id AS id, 
+        RETURN    
             p.title AS title, 
-            p.content AS content,
-            p.created_at AS created_at,
-            p.updated_at AS updated_at,
-            cat.id AS category_id,
-            cat.name AS category_name,
-            t.id AS topic_id,
-            t.name AS topic_name,
-            u.id AS user_id,
-            u.username AS username,
-            u.first_name AS first_name,
-            u.last_name AS last_name,
-            bt.id AS token_id,
-            bt.name AS token_name
+            p.category_name AS category_name
         """
         result = self.run_query(query, {"post_id": post_id})
         return result[0] if result else None
+
 
 
 # Create a singleton instance

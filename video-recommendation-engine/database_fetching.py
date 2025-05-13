@@ -613,7 +613,7 @@ API_ENDPOINTS = {
 # Database Configuration
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "Abhay31kashyap$$31")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "neo4jpassword")
 
 # Embedding dimension (kept for generating embeddings that will be stored in Neo4j)
 EMBEDDING_DIM = 384
@@ -716,8 +716,6 @@ class APIDataFetcher:
         return edges
     
     def prepare_data_for_neo4j(self, data, edges):
-        """Prepare data for Neo4j database"""
-        # Process users
         users = data["users"].copy()
         users = users.rename(columns={"id": "id"})
         
@@ -736,8 +734,16 @@ class APIDataFetcher:
                 return category.get("name", "Unknown")
             return "Unknown"
             
+        # Extract project code from topic
+        def extract_project_code(topic):
+                if isinstance(topic, list) and topic:
+                    return topic[0].get("project_code", "") if isinstance(topic[0], dict) else ""
+                return ""
+
+            
         posts["category_id"] = posts["category"].apply(extract_category_id)
         posts["category_name"] = posts["category"].apply(extract_category_name)
+        posts["project_code"] = posts["topic"].apply(extract_project_code)
         
         # Process interactions for Neo4j
         # Split interactions into train/val/test sets based on time
@@ -823,7 +829,7 @@ class Neo4jHandler:
             
             if (i + batch_size) % 5000 == 0 or (i + batch_size) >= len(users):
                 print(f"Saved {min(i + batch_size, len(users))} users")
-    
+                
     def save_posts(self, posts):
         """Save posts to Neo4j"""
         print(f"Saving {len(posts)} posts to Neo4j...")
@@ -841,6 +847,7 @@ class Neo4jHandler:
                 p.content = post.content,
                 p.category_id = post.category_id,
                 p.category_name = post.category_name,
+                p.project_code = post.project_code,
                 p.created_at = post.created_at,
                 p.updated_at = post.updated_at
             """
@@ -853,7 +860,7 @@ class Neo4jHandler:
             
             if (i + batch_size) % 5000 == 0 or (i + batch_size) >= len(posts):
                 print(f"Saved {min(i + batch_size, len(posts))} posts")
-    
+            
     def save_interactions(self, interactions):
         """Save user-post interactions to Neo4j"""
         for split, edges in interactions.items():

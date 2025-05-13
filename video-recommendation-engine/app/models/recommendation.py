@@ -437,104 +437,14 @@ class RecommendationSystem:
     
     # THIS IS THE MISSING METHOD - Added as a class method
     def _get_post_details(self, post_id):
-        # Call the get_post_title_and_category method
-        result = self.get_post_title_and_category(post_id)
-        if result.get('success'):
+        from app.models.database import neo4j_db
+        result = neo4j_db.get_post_by_id(post_id)
+        if result:
             return {
-                "title": result.get('title'),
-                "category": result.get('category_name')
+                "title": result["title"],
+                "category_name": result["category_name"]
             }
-        return {
-            "title": f"Post {post_id}",
-            "category": "Unknown"
-        }
-    
-    # Fixed function moved as a class method
-    def get_post_title_and_category(self, post_id):
-        """
-        Fetches post title and category name by post ID, going through all available pages if needed
-        
-        Args:
-            post_id (int): The ID of the post to fetch
-            
-        Returns:
-            dict: Object containing success status, title and category name or error message
-        """
-        try:
-            # API endpoint
-            api_url = 'https://api.socialverseapp.com/posts/summary/get'
-            
-            # Authentication token
-            auth_token = 'flic_11d3da28e403d182c36a3530453e290add87d0b4a40ee50f17611f180d47956f'
-            
-            # Headers for the request
-            headers = {
-                'Flic-Token': auth_token,
-                'Content-Type': 'application/json'
-            }
-            
-            # Initialize pagination variables
-            page = 1
-            while True:
-                # Make API request with pagination and page size of 1000
-                response = requests.get(api_url, headers=headers, params={'page': page, 'page_size': 1000})
-                
-                # Check if response is OK
-                response.raise_for_status()
-                
-                # Parse response data
-                data = response.json()
-                
-                # Debug: Print the response data to inspect structure
-                logger.debug(f"Page {page} data: {data}")
-                
-                # Check if request was successful
-                if data.get('status') != 'success':
-                    return {
-                        'success': False,
-                        'message': 'API returned unsuccessful status'
-                    }
-                
-                # If no posts in response, stop loading more pages
-                posts = data.get('posts', [])
-                if not posts:
-                    break  # No more posts available
-                
-                # Find the post with matching ID
-                post = next((post for post in posts if post.get('id') == post_id), None)
-                
-                # If post is found, return title and category name
-                if post:
-                    title = post.get('title', 'No title available')
-                    category_name = post.get('category', {}).get('name', 'No category available')
-                    return {
-                        'success': True,
-                        'title': title,
-                        'category_name': category_name
-                    }
-                
-                # Increment the page number for the next request
-                page += 1
-            
-            # If post is not found after checking all pages
-            return {
-                'success': False,
-                'message': f'Post with ID {post_id} not found'
-            }
-            
-        except requests.exceptions.RequestException as e:
-            logger.error(f"API request error: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Error fetching post: {str(e)}'
-            }
-        except Exception as e:
-            logger.error(f"Unexpected error in get_post_title_and_category: {str(e)}")
-            return {
-                'success': False,
-                'message': f'Unexpected error: {str(e)}'
-            }
-
+        return "Cannot Find post details"
 
 # Create singleton instance
 recommendation_system = RecommendationSystem()
