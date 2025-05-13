@@ -90,9 +90,4 @@ For new users, the system:
 - **Background Processing**: Data collection runs in the background
 - **Batch Processing**: Database operations are batched for efficiency
 
-## Extending the System
 
-To extend the recommendation system:
-
-1. **Add New Features**: Modify the feature extraction in the data processing pipeline
-2. **Ad
