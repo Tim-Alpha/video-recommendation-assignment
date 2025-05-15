@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+pydantic
+sqlalchemyp
+torch_geometric
+tensorflow
+sqlalchemy
+pandas
+scikit-learn
