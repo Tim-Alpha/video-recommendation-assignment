@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+implicit
+tensorflow
+requests
+sentence-transformers
+faiss-cpu
+fastapi
+uvicorn
+python-dotenv
