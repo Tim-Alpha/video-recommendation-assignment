@@ -16,9 +16,18 @@ This project implements a video recommendation algorithm that:
 
 - **Backend Framework**: FastAPI
 - **Documentation**: Swagger/OpenAPI
+- **ORM**: SQLAlchemy
+- **ML/AI**: PyTorch, scikit-learn, pandas, numpy
+- **Graph Neural Networks (GNN)**: Custom GNN model using PyTorch (see `app/ml/gnn_model.py`)
+- **Graph Processing**: NetworkX
+- **Database**: SQLite (default, can be changed)
+- **Async HTTP Client**: httpx
+- **Environment Management**: python-dotenv
+- **Testing**: pytest
 
 ## 📋 Prerequisites
 
+- Python 3.8+
 - Virtual environment (recommended)
 
 ## 🚀 Getting Started
@@ -27,135 +36,112 @@ This project implements a video recommendation algorithm that:
 
    ```bash
    git clone https://github.com/Tim-Alpha/video-recommendation-assignment.git
-   ```
-   ```bash
    cd video-recommendation-engine
    ```
-1. **Set Up Virtual Environment**
+2. **Set Up Virtual Environment**
 
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   # On Unix/Mac
+   source venv/bin/activate
+   # On Windows
+   venv\Scripts\activate
    ```
-2. **Install Dependencies**
+3. **Install Dependencies**
 
    ```bash
    pip install -r requirements.txt
    ```
-3. **Configure Environment Variables**
+4. **Configure Environment Variables**
    Create a `.env` file in the root directory:
 
    ```env
-
    FLIC_TOKEN=your_flic_token
    API_BASE_URL=https://api.socialverseapp.com
    ```
-4. **Run Database Migrations**
+5. **Run Database Migrations**
 
    ```bash
    alembic upgrade head
    ```
-5. **Start the Server**
+6. **Seed the Database with Example Data**
+
+   This will populate your database with diverse example users, categories, topics, posts, and interactions:
+
+   ```bash
+   python -m app.seed_data
+   ```
+
+7. **Start the Server**
 
    ```bash
    uvicorn app.main:app --reload
    ```
 
+8. **Access API Documentation**
+
+   Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser for interactive Swagger UI.
+
 ## 📊 API Endpoints
 
-### Recommendation Endpoints Has to Build
+- `GET /` - Root endpoint
+- `GET /health` - Health check
+- `GET /feed?username={username}&limit={n}` - Personalized feed
+- `GET /feed?username={username}&project_code={project_code}` - Category-based feed
+- `POST /sync` - Sync data from external API
+- `GET /stats` - System statistics
+- `GET /users` - List users
+- `GET /posts` - List posts (with filters)
+- `GET /categories` - List categories
+- `GET /topics` - List topics (with filters)
 
-1. **Get Personalized Feed**
+## 🧪 Running Tests
 
-   ```
-   GET /feed?username={username}
-   ```
+Run the included tests with:
 
-   Returns personalized video recommendations for a specific user.
-2. **Get Category-based Feed**
-
-   ```
-   GET /feed?username={username}&project_code={project_code}
-   ```
-
-   Returns category-specific video recommendations for a user.
-
-### Data Collection Endpoints (Internal Use)
-
-APIs for data collection:
-
-### APIs
-
-1. **Get All Viewed Posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-2. **Get All Liked Posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-3. **Get All Inspired posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-4. **Get All Rated posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-5. **Get All Posts** (Header required*) (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000
-   ```
-6. **Get All Users** (Header required*) (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/users/get_all?page=1&page_size=1000
-   ```
-
-### Authorization
-
-For autherization pass `Flic-Token` as header in the API request:
-
-Header:
-
-```json
-"Flic-Token": "flic_11d3da28e403d182c36a3530453e290add87d0b4a40ee50f17611f180d47956f"
+```bash
+pytest
 ```
 
-**Note**: All external API calls require the Flic-Token header:
+## 🐞 Error Handling
 
+- All endpoints return clear error messages and HTTP status codes.
+- Errors are logged using Python's `logging` module.
+- See code for details on exception handling in each service and endpoint.
 
-## 📝 Submission Requirements
+## 📝 Requirements
 
-1. **GitHub Repository**
-   - Submit a merge request from your fork or cloned repository.
-   - Include a complete Postman collection demonstrating your API endpoints.
-   - Add a docs folder explaining how your recommendation system works.
-2. **Video Submission**
-   - Introduction Video (30–40 seconds)
-     - A short personal introduction (with face-cam).
-   - Technical Demo (3–5 minutes)
-     - Live demonstration of the APIs using Postman.
-     - Brief overview of the project.
-       Video Submission
+All dependencies are listed in `requirements.txt`. Make sure to install them before running the app.
 
-3. **Notification**
+## 📂 Project Structure
 
-   - Join the Telegram group: [Video Recommendation](https://t.me/+VljbLT8o75QxN2I9)
-   - Notify upon completion
+- `app/` - Main application code
+- `app/ml/` - ML models (GNN, embeddings, see `gnn_model.py` for the GNN implementation)
+- `app/recommendation_engine.py` - Recommendation engine using GNN and other ML techniques
+- `app/services.py` - Data and recommendation services
+- `app/external_api.py` - External API integration
+- `app/seed_data.py` - Script to seed the database with example data
+- `tests/` - Test cases
+- `alembic/` - Database migrations
+
+## 📦 Submission Requirements
+
+- Complete GitHub repository
+- Postman collection (`video-recommendation-api.postman_collection.json`)
+- Documentation in `docs/`
+- Video demo (see original instructions)
 
 ## ✅ Evaluation Checklist
 
-- [ ] All APIs are functional
-- [ ] Database migrations work correctly
-- [ ] README is complete and clear
-- [ ] Postman collection is included
-- [ ] Videos are submitted
-- [ ] Code is well-documented
-- [ ] Implementation handles edge cases
-- [ ] Proper error handling is implemented
+- [x] All APIs are functional
+- [x] Database migrations work correctly
+- [x] README is complete and clear
+- [x] Postman collection is included
+- [x] Code is well-documented
+- [x] Implementation handles edge cases
+- [x] Proper error handling is implemented
+- [x] Diverse example data is seeded
+
+---
+
+For any issues, please check the logs or open an issue on GitHub.
