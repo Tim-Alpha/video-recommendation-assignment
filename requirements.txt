@@ -1,0 +1,16 @@
+fastapi==0.104.1
+starlette==0.27.0
+uvicorn[standard]
+sqlalchemy
+alembic
+python-dotenv
+httpx
+pydantic
+pydantic-settings
+numpy
+pandas
+scikit-learn
+torch
+networkx
+python-multipart
+pytest

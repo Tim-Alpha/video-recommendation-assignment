@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "Video Recommendation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Root",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": [""] }
+      }
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/health", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["health"] }
+      }
+    },
+    {
+      "name": "Feed (Personalized)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/feed?username=testuser", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["feed"], "query": [{"key": "username", "value": "testuser"}] }
+      }
+    },
+    {
+      "name": "Feed (Category)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/feed?username=testuser&project_code=flic", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["feed"], "query": [{"key": "username", "value": "testuser"}, {"key": "project_code", "value": "flic"}] }
+      }
+    },
+    {
+      "name": "Sync",
+      "request": {
+        "method": "POST",
+        "url": { "raw": "http://localhost:8000/sync", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["sync"] }
+      }
+    },
+    {
+      "name": "Stats",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/stats", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["stats"] }
+      }
+    },
+    {
+      "name": "Users",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/users?limit=10", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["users"], "query": [{"key": "limit", "value": "10"}] }
+      }
+    },
+    {
+      "name": "Posts",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/posts?limit=10", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["posts"], "query": [{"key": "limit", "value": "10"}] }
+      }
+    },
+    {
+      "name": "Categories",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/categories", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["categories"] }
+      }
+    },
+    {
+      "name": "Topics",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8000/topics", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["topics"] }
+      }
+    }
+  ]
+}
