@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Recommendation Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+
+  <h1 class="text-3xl font-bold mb-6">Video Recommendation Engine</h1>
+
+  <!-- Username Input -->
+  <div class="mb-4 flex gap-2">
+    <input type="text" id="username" placeholder="Enter username" class="p-2 border rounded" />
+    <button id="fetchPersonal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Fetch Personalized Feed</button>
+  </div>
+
+  <!-- Category Selection -->
+  <div class="mb-4 flex gap-2">
+    <select id="category" class="p-2 border rounded">
+      <option value="">Select Category</option>
+      <option value="Motivation">Motivation</option>
+      <option value="Wellness">Wellness</option>
+      <option value="Health">Health</option>
+      <option value="Focus">Focus</option>
+    </select>
+    <button id="fetchCategory" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Fetch Category Feed</button>
+  </div>
+
+  <!-- Personalized Feed Display -->
+  <h2 class="text-2xl font-semibold mt-4">Feed:</h2>
+  <div id="feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 w-full max-w-5xl"></div>
+
+  <script>
+    const feedDiv = document.getElementById("feed");
+    const usernameInput = document.getElementById("username");
+    const categorySelect = document.getElementById("category");
+
+    async function fetchFeed(url) {
+      feedDiv.innerHTML = '<p class="col-span-full text-center">Loading...</p>';
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.recommended_videos.length === 0) {
+          feedDiv.innerHTML = '<p class="col-span-full text-center text-red-500">No videos found</p>';
+          return;
+        }
+
+        feedDiv.innerHTML = '';
+        data.recommended_videos.forEach(video => {
+          const card = document.createElement('div');
+          card.className = "bg-white p-4 rounded shadow hover:shadow-lg transition";
+          card.innerHTML = `
+            <h3 class="font-bold text-lg">${video.title}</h3>
+            ${video.category ? `<p class="text-gray-500">Category: ${video.category}</p>` : ''}
+            <p class="text-gray-700">Score: ${video.score}</p>
+          `;
+          feedDiv.appendChild(card);
+        });
+      } catch (error) {
+        feedDiv.innerHTML = '<p class="col-span-full text-center text-red-500">Error fetching feed</p>';
+        console.error(error);
+      }
+    }
+
+    document.getElementById("fetchPersonal").addEventListener("click", () => {
+      const username = usernameInput.value.trim();
+      if (!username) return alert("Enter username");
+      fetchFeed(`http://127.0.0.1:8000/feed/?username=${username}`);
+    });
+
+    document.getElementById("fetchCategory").addEventListener("click", () => {
+      const username = usernameInput.value.trim();
+      const category = categorySelect.value;
+      if (!username) return alert("Enter username");
+      if (!category) return alert("Select category");
+      fetchFeed(`http://127.0.0.1:8000/feed/category?username=${username}&project_code=${category}`);
+    });
+  </script>
+
+</body>
+</html>
