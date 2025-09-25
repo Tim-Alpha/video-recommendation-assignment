@@ -1,0 +1,47 @@
+{
+  "info": {
+    "_postman_id": "d4f6c77a-7e3a-4f2c-bc1f-8c1d6e5f5d52",
+    "name": "Video Recommendation Engine",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for testing Video Recommendation Engine APIs"
+  },
+  "item": [
+    {
+      "name": "Personalized Feed",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/feed/?username=John",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["feed"],
+          "query": [
+            {"key": "username", "value": "John"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Category Feed",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/feed/category?username=John&project_code=Motivation",
+          "protocol": "http",
+          "host": ["127.0.0.1"],
+          "port": "8000",
+          "path": ["feed", "category"],
+          "query": [
+            {"key": "username", "value": "John"},
+            {"key": "project_code", "value": "Motivation"}
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
