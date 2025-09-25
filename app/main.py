@@ -7,14 +7,10 @@ import random
 from datetime import datetime
 import os
 
-# ----------------------
 # Create FastAPI app first
-# ----------------------
 app = FastAPI(title="Video Recommendation Engine")
 
-# ----------------------
 # Now mount frontend folder for serving HTML, CSS, JS
-# ----------------------
 frontend_path = os.path.join(os.path.dirname(__file__), "../frontend")
 app.mount("/frontend", StaticFiles(directory=frontend_path), name="frontend")
 
@@ -37,9 +33,7 @@ def get_db():
     finally:
         db.close()
 
-# ----------------------
 # Interaction weights for scoring
-# ----------------------
 INTERACTION_WEIGHTS = {
     "view": 1,
     "like": 3,
@@ -59,9 +53,7 @@ MOOD_CATEGORIES = {
     "Focus": ["Study Tips", "Productivity Hacks"]
 }
 
-# ----------------------
 # Generate random interactions for demo
-# ----------------------
 def generate_random_interactions(db: Session):
     users = db.query(models.User).all()
     videos = db.query(models.Video).all()
@@ -83,9 +75,7 @@ def generate_random_interactions(db: Session):
             db.add(interaction)
     db.commit()
 
-# ----------------------
 # Personalized feed with cold-start support
-# ----------------------
 @app.get("/feed/")
 def get_personalized_feed(username: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == username).first()
@@ -127,9 +117,7 @@ def get_personalized_feed(username: str, db: Session = Depends(get_db)):
     recommended.sort(key=lambda x: x["score"], reverse=True)
     return {"username": username, "recommended_videos": recommended}
 
-# ----------------------
 # Category-based feed with cold-start support
-# ----------------------
 @app.get("/feed/category")
 def get_category_feed(
     username: str,
