@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Recommendation Engine</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h2 {
+            margin-top: 30px;
+            color: #555;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 16px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .video-list, .feed-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 0;
+            list-style: none;
+        }
+        li {
+            background-color: #fafafa;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .video-category {
+            font-size: 14px;
+            color: #777;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Video Recommendations</h1>
+
+        <h2>Enter Username:</h2>
+        <input type="text" id="username" placeholder="Enter username" value="umar">
+
+        <h2>All Videos</h2>
+        <ul id="videos" class="video-list"></ul>
+
+        <h2>Your Feed</h2>
+        <label for="project_code">Choose a category:</label>
+        <select id="project_code">
+            <option value="">All</option>
+            <option value="motivation">Motivation</option>
+            <option value="inspiration">Inspiration</option>
+            <option value="self-help">Self-help</option>
+        </select>
+        <button onclick="getFeed()">Get Feed</button>
+        <ul id="feed" class="feed-list"></ul>
+        <div id="loading" class="loading" style="display:none;">Loading...</div>
+    </div>
+
+    <script>
+        const videosEl = document.getElementById("videos");
+        const feedEl = document.getElementById("feed");
+        const usernameEl = document.getElementById("username");
+        const projectCodeEl = document.getElementById("project_code");
+        const loadingEl = document.getElementById("loading");
+
+        async function fetchVideos() {
+            try {
+                const res = await fetch("/api/videos");
+                const data = await res.json();
+                videosEl.innerHTML = "";
+                data.forEach(video => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `<div class="video-title">${video.video_id}: ${video.title}</div>`;
+                    videosEl.appendChild(li);
+                });
+            } catch (err) {
+                alert("Failed to fetch videos");
+                console.error(err);
+            }
+        }
+
+        async function getFeed() {
+            const username = usernameEl.value.trim();
+            const project_code = projectCodeEl.value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+
+            loadingEl.style.display = "block";
+            feedEl.innerHTML = "";
+
+            let url = `/api/feed?username=${encodeURIComponent(username)}`;
+            if (project_code) {
+                url += `&project_code=${encodeURIComponent(project_code)}`;
+            }
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`Error: ${res.status}`);
+                const data = await res.json();
+
+                feedEl.innerHTML = "";
+                data.feed.forEach(item => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <div class="video-title">${item.video_id}: ${item.title}</div>
+                        <div class="video-category">${item.category || "No category"}</div>
+                    `;
+                    feedEl.appendChild(li);
+                });
+            } catch (err) {
+                alert("Failed to fetch feed");
+                console.error(err);
+            } finally {
+                loadingEl.style.display = "none";
+            }
+        }
+
+        // Initial load
+        fetchVideos();
+        getFeed();
+    </script>
+</body>
+</html>
