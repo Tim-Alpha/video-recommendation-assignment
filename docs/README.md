@@ -49,9 +49,9 @@ source venv/bin/activate
 - Users can fetch videos filtered by category (`project_code` query parameter).
 - Combines **cold-start mood-based recommendations** and **interaction-weighted scores**.
 
-### 4. Randomized Interaction Simulation (Demo Mode)
-- For demonstration purposes, random interactions are generated for existing users.
-- This simulates **dynamic feed updates** in Postman or live testing.
+### 4. Live FLIC API Integration
+- All videos and metadata are fetched live from the FLIC API.
+- Ensures up-to-date video content for every user request.
 
 ### 5. FastAPI & OpenAPI Integration
 - Automatic API documentation available at `http://127.0.0.1:8000/docs`.
@@ -150,9 +150,8 @@ We have also added a simple interactive frontend to visualize the personalized a
 
 ## Future Enhancements
 
-1. Integrate real **FLIC API** for live user interactions.
-2. Implement **graph neural network** or **embedding-based video similarity**.
-3. Add **pagination and caching** for large datasets.
-4. Add **user authentication** for secure API access.
+1. Implement **graph neural network** or **embedding-based video similarity**.
+2. Add **pagination and caching** for large datasets.
+3. Add **user authentication** for secure API access.
 
 
