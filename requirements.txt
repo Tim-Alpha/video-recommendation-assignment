@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+requests
+python-dotenv
+sqlalchemy
+alembic
+pandas
+scikit-learn
