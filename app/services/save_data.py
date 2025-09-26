@@ -72,7 +72,7 @@ def save_data_to_json(filename="socialverse_data.json"):
     data = fetch_all_data()
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-    print(f"✅ Data saved to {filename}")
+    print(f"Data saved to {filename}")
     return data
 
 def save_data_to_db(data: dict):

@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-#  Alembic config
 config = context.config
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
