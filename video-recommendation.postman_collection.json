@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "64423fea-3512-419c-9050-324372d69e23",
+		"name": "video-recommendation",
+		"description": "there are 2 api's here-\n\n- user recommendation\n    \n- category",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47653490",
+		"_collection_link": "https://satyamsingh18177-3179405.postman.co/workspace/2da0391e-68b3-465f-845f-6b0031576046/collection/47653490-64423fea-3512-419c-9050-324372d69e23?action=share&source=collection_link&creator=47653490"
+	},
+	"item": [
+		{
+			"name": "user_recommendation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"description": "takes username and mood as input, if you dont wanna give any specific input ,just keep mood as default"
+			},
+			"response": []
+		},
+		{
+			"name": "category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"description": "just input category to get related videos"
+			},
+			"response": []
+		}
+	]
+}
