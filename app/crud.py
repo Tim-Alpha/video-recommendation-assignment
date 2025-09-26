@@ -1,9 +1,7 @@
 from sqlalchemy.orm import Session
 from app import models
 
-# -------------------------
 # User CRUD
-# -------------------------
 def get_user(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
@@ -14,9 +12,7 @@ def create_user(db: Session, username: str):
     db.refresh(user)
     return user
 
-# -------------------------
 # Video CRUD
-# -------------------------
 def get_video(db: Session, video_id: str):
     return db.query(models.Video).filter(models.Video.id == video_id).first()
 
@@ -34,9 +30,7 @@ def create_video(db: Session, video: dict):
     db.refresh(db_video)
     return db_video
 
-# -------------------------
 # Interactions CRUD
-# -------------------------
 def record_interaction(db: Session, user_id: int, video_id: str, action: str):
     """
     Record a like, view, or watch event for a user.
@@ -74,9 +68,7 @@ def has_user_interacted(db: Session, user_id: int, video_id: str) -> bool:
         is not None
     )
 
-# -------------------------
 # Cold Start Support
-# -------------------------
 def get_cold_start_videos(db: Session, category: str = None):
     """
     Returns default videos for cold-start users.
