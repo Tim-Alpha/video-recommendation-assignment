@@ -12,6 +12,8 @@ class Video(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     category = Column(String)
+    video_link = Column(String, default="")       # <-- new field
+    thumbnail_url = Column(String, default="")    # <-- new field
 
 class Interaction(Base):
     __tablename__ = "interactions"

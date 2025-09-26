@@ -1,44 +1,50 @@
-import random
-from datetime import datetime
-from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app import models
+import os
+import requests
+from dotenv import load_dotenv
 
-# Interaction types
-INTERACTION_TYPES = ["view", "like", "inspire", "rating"]
+load_dotenv()
 
-def generate_random_interactions():
-    db: Session = SessionLocal()
+FLIC_TOKEN = os.getenv("FLIC_TOKEN")
+BASE_URL = os.getenv("API_BASE_URL") + "/posts/view?page=1&page_size=1000"
+
+def fetch_videos_from_flic():
+    """
+    Fetch videos from FLIC API using the token and base URL from .env
+    Returns a list of dicts with keys: id, title, category, video_link, thumbnail_url, score
+    """
+    if not FLIC_TOKEN or not BASE_URL:
+        print("❌ FLIC_TOKEN or BASE_URL not set in .env")
+        return []
+
+    headers = {"Flic-Token": FLIC_TOKEN}
     try:
-        # Clear previous interactions for a fresh demo
-        db.query(models.Interaction).delete()
-        db.commit()
+        response = requests.get(BASE_URL, headers=headers, timeout=10)
+        response.raise_for_status()
+        data = response.json()
 
-        users = db.query(models.User).all()
-        videos = db.query(models.Video).all()
+        if "posts" not in data:
+            print("⚠️ FLIC token valid but unexpected data structure:", data)
+            return []
 
-        for user in users:
-            # Each user interacts with 2-5 videos randomly
-            for _ in range(random.randint(2, 5)):
-                video = random.choice(videos)
-                interaction_type = random.choice(INTERACTION_TYPES)
+        videos = []
+        for post in data["posts"]:
+            video_link = post.get("video_link")
+            thumbnail_url = post.get("thumbnail_url")
+            if not video_link or not thumbnail_url:
+                continue
 
-                # Add new interaction
-                interaction = models.Interaction(
-                    user_id=user.id,
-                    video_id=video.id,
-                    interaction_type=interaction_type,
-                    timestamp=datetime.utcnow()
-                )
-                db.add(interaction)
-        db.commit()
-        print("Random interactions generated successfully!")
-    except Exception as e:
-        db.rollback()
-        print("Error generating interactions:", e)
-    finally:
-        db.close()
+            videos.append({
+                "id": post.get("id"),
+                "title": post.get("title", "Untitled"),
+                "category": post.get("category", {}).get("name", "Unknown"),
+                "video_link": video_link,
+                "thumbnail_url": thumbnail_url,
+                "score": 0
+            })
 
+        print(f"✅ FLIC API fetched {len(videos)} videos successfully.")
+        return videos
 
-if __name__ == "__main__":
-    generate_random_interactions()
+    except requests.exceptions.RequestException as e:
+        print("❌ Error fetching videos from FLIC API:", e)
+        return []

@@ -5,14 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Video Recommendation Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Modal styling */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 50; }
+    .modal.active { display: flex; }
+    .modal video { max-width: 90%; max-height: 80%; border-radius: 8px; }
+
+    /* Video card hover & overlay */
+    .video-card { position: relative; cursor: pointer; border-radius: 8px; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .video-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .video-card img { width: 100%; display: block; }
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      color: white;
+      background: rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    .video-card:hover .play-overlay { opacity: 1; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+<body class="bg-gray-100 p-6 flex flex-col items-center">
 
   <h1 class="text-3xl font-bold mb-6">Video Recommendation Engine</h1>
 
   <!-- Username Input -->
   <div class="mb-4 flex gap-2">
-    <input type="text" id="username" placeholder="Enter username" class="p-2 border rounded" />
+    <input type="text" id="username" placeholder="Enter username" class="p-2 border rounded w-64" />
     <button id="fetchPersonal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Fetch Personalized Feed</button>
   </div>
 
@@ -28,21 +53,30 @@
     <button id="fetchCategory" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Fetch Category Feed</button>
   </div>
 
-  <!-- Personalized Feed Display -->
-  <h2 class="text-2xl font-semibold mt-4">Feed:</h2>
-  <div id="feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 w-full max-w-5xl"></div>
+  <!-- Feed Display -->
+  <div id="feed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-5xl"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <video id="modalVideo" controls></video>
+    <button id="closeModal" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+  </div>
 
   <script>
     const feedDiv = document.getElementById("feed");
     const usernameInput = document.getElementById("username");
     const categorySelect = document.getElementById("category");
+    const modal = document.getElementById("modal");
+    const modalVideo = document.getElementById("modalVideo");
+    const closeModal = document.getElementById("closeModal");
 
     async function fetchFeed(url) {
       feedDiv.innerHTML = '<p class="col-span-full text-center">Loading...</p>';
       try {
         const res = await fetch(url);
         const data = await res.json();
-        if (data.recommended_videos.length === 0) {
+
+        if (!data.recommended_videos || data.recommended_videos.length === 0) {
           feedDiv.innerHTML = '<p class="col-span-full text-center text-red-500">No videos found</p>';
           return;
         }
@@ -50,19 +84,48 @@
         feedDiv.innerHTML = '';
         data.recommended_videos.forEach(video => {
           const card = document.createElement('div');
-          card.className = "bg-white p-4 rounded shadow hover:shadow-lg transition";
+          card.className = "bg-white video-card";
+
+          const interactedBadge = video.interacted ? 
+            `<span class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded text-sm font-semibold">Watched</span>` : '';
+
           card.innerHTML = `
-            <h3 class="font-bold text-lg">${video.title}</h3>
-            ${video.category ? `<p class="text-gray-500">Category: ${video.category}</p>` : ''}
-            <p class="text-gray-700">Score: ${video.score}</p>
+            ${interactedBadge}
+            <h3 class="font-bold p-2">${video.title}</h3>
+            <div class="relative">
+              <img src="${video.thumbnail_url}" alt="${video.title}">
+              <div class="play-overlay">&#9658;</div>
+            </div>
+            <p class="text-gray-500 p-2">Category: ${video.category || 'Unknown'}</p>
           `;
+
+          card.addEventListener("click", () => {
+            modalVideo.src = video.video_link;
+            modal.classList.add("active");
+            modalVideo.play();
+          });
+
           feedDiv.appendChild(card);
         });
-      } catch (error) {
+      } catch (err) {
         feedDiv.innerHTML = '<p class="col-span-full text-center text-red-500">Error fetching feed</p>';
-        console.error(error);
+        console.error(err);
       }
     }
+
+    closeModal.addEventListener("click", () => {
+      modalVideo.pause();
+      modalVideo.src = "";
+      modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modalVideo.pause();
+        modalVideo.src = "";
+        modal.classList.remove("active");
+      }
+    });
 
     document.getElementById("fetchPersonal").addEventListener("click", () => {
       const username = usernameInput.value.trim();
