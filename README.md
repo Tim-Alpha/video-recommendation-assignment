@@ -1,161 +1,103 @@
-# Video Recommendation Engine
+# 🎬 Socialverse Video Recommender
 
-A sophisticated recommendation system that suggests personalized video content based on user preferences and engagement patterns using deep neural networks. Ref: to see what kind of motivational content you have to recommend, take reference from our Empowerverse App [ANDROID](https://play.google.com/store/apps/details?id=com.empowerverse.app) || [iOS](https://apps.apple.com/us/app/empowerverse/id6449552284).
+An AI-powered video recommendation system built with **FastAPI**, **Streamlit**, and **SQLite**.  
+It uses **TF-IDF**, **KMeans clustering**, and **cosine similarity** to recommend personalized video content to users based on their past interactions and chosen categories.
 
-## 🎯 Project Overview
+---
 
-This project implements a video recommendation algorithm that:
+##  Project Structure
 
-- Delivers personalized content recommendations
-- Handles cold start problems using mood-based recommendations
-- Utilizes Graph/Deep neural networks for content analysis
-- Integrates with external APIs for data collection
-- Implements efficient data caching and pagination
-
-## 🛠️ Technology Stack
-
-- **Backend Framework**: FastAPI
-- **Documentation**: Swagger/OpenAPI
-
-## 📋 Prerequisites
-
-- Virtual environment (recommended)
-
-## 🚀 Getting Started
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/Tim-Alpha/video-recommendation-assignment.git
-   ```
-   ```bash
-   cd video-recommendation-engine
-   ```
-1. **Set Up Virtual Environment**
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-2. **Install Dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory:
-
-   ```env
-
-   FLIC_TOKEN=your_flic_token
-   API_BASE_URL=https://api.socialverseapp.com
-   ```
-4. **Run Database Migrations**
-
-   ```bash
-   alembic upgrade head
-   ```
-5. **Start the Server**
-
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-## 📊 API Endpoints
-
-### Recommendation Endpoints Has to Build
-
-1. **Get Personalized Feed**
-
-   ```
-   GET /feed?username={username}
-   ```
-
-   Returns personalized video recommendations for a specific user.
-2. **Get Category-based Feed**
-
-   ```
-   GET /feed?username={username}&project_code={project_code}
-   ```
-
-   Returns category-specific video recommendations for a user.
-
-### Data Collection Endpoints (Internal Use)
-
-APIs for data collection:
-
-### APIs
-
-1. **Get All Viewed Posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/view?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-2. **Get All Liked Posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/like?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-3. **Get All Inspired posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/inspire?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-4. **Get All Rated posts** (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/rating?page=1&page_size=1000&resonance_algorithm=resonance_algorithm_cjsvervb7dbhss8bdrj89s44jfjdbsjd0xnjkbvuire8zcjwerui3njfbvsujc5if
-   ```
-5. **Get All Posts** (Header required*) (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/posts/summary/get?page=1&page_size=1000
-   ```
-6. **Get All Users** (Header required*) (METHOD: GET):
-
-   ```
-   https://api.socialverseapp.com/users/get_all?page=1&page_size=1000
-   ```
-
-### Authorization
-
-For autherization pass `Flic-Token` as header in the API request:
-
-Header:
-
-```json
-"Flic-Token": "flic_11d3da28e403d182c36a3530453e290add87d0b4a40ee50f17611f180d47956f"
-```
-
-**Note**: All external API calls require the Flic-Token header:
+video-recommendation-assignment/
+│── app/
+│ ├── data.py # Database connection & session setup
+│ ├── models/
+│ │ └── model.py # SQLAlchemy ORM models (User, Post, Interaction)
+│ ├── recommender.py # Core recommendation engine
+│ └── main.py # FastAPI backend (API endpoint: /feed)
+│── migrations/ # Alembic migrations for DB schema
+│── streamlit_app.py # Streamlit frontend (UI for users)
+│── app.db # SQLite database
+│── requirements.txt # Python dependencies
+│── README.md # Project documentation
+│── .gitignore # Ignored files (venv, db, cache, etc.)
 
 
-## 📝 Submission Requirements
+---
 
-1. **GitHub Repository**
-   - Submit a merge request from your fork or cloned repository.
-   - Include a complete Postman collection demonstrating your API endpoints.
-   - Add a docs folder explaining how your recommendation system works.
-2. **Video Submission**
-   - Introduction Video (30–40 seconds)
-     - A short personal introduction (with face-cam).
-   - Technical Demo (3–5 minutes)
-     - Live demonstration of the APIs using Postman.
-     - Brief overview of the project.
-       Video Submission
+## Technologies Used
 
-3. **Notification**
+- **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
+- **Frontend:** [Streamlit](https://streamlit.io/)
+- **Database:** SQLite + SQLAlchemy ORM
+- **Migrations:** Alembic
+- **Machine Learning:** 
+  - TF-IDF Vectorizer (text feature extraction)
+  - KMeans clustering (grouping posts)
+  - Cosine similarity (user–post matching)
 
-   - Join the Telegram group: [Video Recommendation](https://t.me/+VljbLT8o75QxN2I9)
-   - Notify upon completion
+---
 
-## ✅ Evaluation Checklist
+##  Getting Started
 
-- [ ] All APIs are functional
-- [ ] Database migrations work correctly
-- [ ] README is complete and clear
-- [ ] Postman collection is included
-- [ ] Videos are submitted
-- [ ] Code is well-documented
-- [ ] Implementation handles edge cases
-- [ ] Proper error handling is implemented
+###  Clone the repository
+```bash
+git clone https://github.com/your-username/video-recommendation-assignment.git
+cd video-recommendation-assignment
+2. Create a virtual environment
+bash
+Copy code
+python -m venv venv
+source venv/bin/activate   # Mac/Linux
+venv\Scripts\activate      # Windows
+3 .Install dependencies
+bash
+Copy code
+pip install -r requirements.txt
+4️. Setup the database
+Initialize Alembic migrations and create tables:
+
+bash
+Copy code
+alembic upgrade head
+(Or if DB already exists, skip this step)
+
+5Run the FastAPI backend
+bash
+Copy code
+uvicorn app.main:app --reload --port 8000
+Backend runs at  http://127.0.0.1:8000/feed
+
+ Run the Streamlit frontend
+bash
+Copy code
+streamlit run streamlit_app.py
+Frontend runs at  http://localhost:8501
+
+API Testing with Postman
+Example request:
+
+nginx
+Copy code
+GET http://127.0.0.1:8000/feed?username=Anushka&project_code=Education
+Response:
+
+json
+Copy code
+{
+  "username": "Anushka",
+  "recommendations": [
+    {
+      "post_id": "5175",
+      "title": "Great things never come from comfort zones",
+      "category": "Motivation",
+      "mood": "Inspiring"
+    }
+  ]
+}
+Streamlit UI
+Enter a username
+
+Choose a category from dropdown
+
+Get personalized recommendations with titles, categories, and moods
+

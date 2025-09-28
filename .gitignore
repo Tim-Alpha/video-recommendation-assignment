@@ -1,0 +1,29 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+((vennv))/
+
+# SQLite DB
+*.db
+
+# Logs and caches
+*.log
+*.cache/
+.cache/
+
+# Data dumps (keep only if needed)
+socialverse_all_data.json
+socialverse_data.json
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE/editor
+.vscode/
+.idea/
