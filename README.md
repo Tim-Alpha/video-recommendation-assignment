@@ -124,7 +124,7 @@ For autherization pass `Flic-Token` as header in the API request:
 Header:
 
 ```json
-"Flic-Token": "flic_11d3da28e403d182c36a3530453e290add87d0b4a40ee50f17611f180d47956f"
+"Flic-Token": "flic_e657dc77ce71262a4f5dc78e0c9e1bf02a7f0e186b664708c39369f182ad2518"
 ```
 
 **Note**: All external API calls require the Flic-Token header:
