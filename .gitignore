@@ -1,0 +1,5 @@
+empverse_venv
+.env
+__pycache__
+data.db
+my-env
