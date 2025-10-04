@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary  # Or another database driver
+alembic
+pydantic[email]
+python-dotenv
+httpx
+python-multipart
+sentence-transformers 
+torch
+numpy 
+scikit-learn
